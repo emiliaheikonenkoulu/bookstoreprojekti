@@ -12,6 +12,12 @@
 	<p>Year: <input type="text" th:field="${book.year}" /></p>
 	<p>ISBN: <input type="text" th:field="${book.isbn}" /></p>
 	<p>Price: <input type="text" th:field="${book.price}" /></p>
+	
+	<label for="categorylist">Category:</label>
+	<select id="categorylist" th:field="*{category}" class="form-control">
+		<option th:each="category: ${categories}" th:value="${category.categoryid}" th:text="${category.name}"></option>
+	</select>
+	<p></p>
 	<input type="submit" value="Submit" /> <input type="reset" value="Reset" />
 	</form>
     

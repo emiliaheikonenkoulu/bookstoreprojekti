@@ -25,15 +25,12 @@ public class BookstoreApplication {
 	public CommandLineRunner BookDemo(BookRepository bookRepository, CategoryRepository categoryRepository) { 
 		return (args) -> {
 			log.info("save a couple of categories and books");
-			Category category1 = new Category("Thriller");
-			categoryRepository.save(category1);
-			Category category2 = new Category("Romance");
-			categoryRepository.save(category2);
-			Category category3 = new Category("Mystery");
-			categoryRepository.save(category3);
+			categoryRepository.save(new Category("Thriller"));
+			categoryRepository.save(new Category("Romance"));
+			categoryRepository.save(new Category("Mystery"));
 			
-			bookRepository.save(new Book("Promised Land, A", "Barack Obama", 2020, "1232323-21", 34.95, category1));
-			bookRepository.save(new Book("Midnight Sun", "Stephenie Meyer", 2019, "1232323-53", 19.95, category2));
+			bookRepository.save(new Book("Promised Land, A", "Barack Obama", 2020, "1232323-21", 34.95, categoryRepository.findByName("Thriller").get(0)));
+			bookRepository.save(new Book("Midnight Sun", "Stephenie Meyer", 2019, "1232323-53", 19.95, categoryRepository.findByName("Romance").get(0)));
 		
 			log.info("fetch all books");
 			for (Book book : bookRepository.findAll()) {
