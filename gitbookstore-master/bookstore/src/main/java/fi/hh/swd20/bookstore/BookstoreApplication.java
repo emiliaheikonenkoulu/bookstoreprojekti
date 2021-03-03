@@ -35,10 +35,6 @@ public class BookstoreApplication {
 			bookRepository.save(new Book("Promised Land, A", "Barack Obama", 2020, "1232323-21", 34.95, category1));
 			bookRepository.save(new Book("Midnight Sun", "Stephenie Meyer", 2019, "1232323-53", 19.95, category2));
 		
-			log.info("fetch all categories");
-			for (Category category : categoryRepository.findAll()) {
-				log.info(category.toString());
-			}
 			log.info("fetch all books");
 			for (Book book : bookRepository.findAll()) {
 				log.info(book.toString());
