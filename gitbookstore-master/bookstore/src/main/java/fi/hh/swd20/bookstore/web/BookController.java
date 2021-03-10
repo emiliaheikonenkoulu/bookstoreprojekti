@@ -1,6 +1,7 @@
 package fi.hh.swd20.bookstore.web;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import fi.hh.swd20.bookstore.domain.Book;
 import fi.hh.swd20.bookstore.domain.BookRepository;
@@ -25,7 +27,18 @@ public class BookController {
 	@Autowired
 	CategoryRepository categoryRepository;
 	
-	
+	// REST palvelu, joka palauttaa kaikki kirjat
+    @RequestMapping(value="/books", method = RequestMethod.GET)
+    public @ResponseBody List<Book> getBooksRest() {	
+        return (List<Book>) bookRepository.findAll();
+    } 
+    
+	// REST palvelu, joka palauttaa yhden kirjan id:n perusteella
+    @RequestMapping(value="/books/{id}", method = RequestMethod.GET)
+    public @ResponseBody Optional<Book> findBookRest(@PathVariable("id") Long bId) {	
+    	return bookRepository.findById(bId);
+    } 
+
 	// kirjalistaus
 	@RequestMapping(value = "/booklist", method = RequestMethod.GET)
 	public String getBooks(Model model) {
@@ -59,9 +72,10 @@ public class BookController {
 		}
 		
 		// kirjan muokkaus lomake
-		@RequestMapping(value = "/edit/{id}")
-		public String editBook(@PathVariable("id") Long bookId, Model model) {
+		@RequestMapping(value = "/editbook/{id}")
+		public String showUpdateForm(@PathVariable("id") Long bookId, Model model) {
 			model.addAttribute("book", bookRepository.findById(bookId));
+			model.addAttribute("categories", categoryRepository.findAll());
 			return "editbook";
 		}
 }
