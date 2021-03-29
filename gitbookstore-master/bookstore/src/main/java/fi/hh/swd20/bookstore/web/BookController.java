@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +41,13 @@ public class BookController {
     public @ResponseBody Optional<Book> findBookRest(@PathVariable("id") Long bId) {	
     	return bookRepository.findById(bId);
     } 
+    
+    // REST metodi, joka lisää tietokantaan JSON:na tulleen uuden kirjan tiedot
+   @PostMapping("/books")
+   public @ResponseBody Book saveBookRest(@RequestBody Book book) {
+	   bookRepository.save(book);
+	   return book;
+   }
 
 	// kirjalistaus
 	@RequestMapping(value = "/booklist", method = RequestMethod.GET)
@@ -66,6 +76,7 @@ public class BookController {
 
 		// kirjan poisto
 		@RequestMapping(value = "/deletebook/{id}", method = RequestMethod.GET)
+		@PreAuthorize("hasRole('ADMIN')")
 		public String deleteBook(@PathVariable("id") Long bookId) {
 			bookRepository.deleteById(bookId);
 			return "redirect:../booklist";
